@@ -5,7 +5,7 @@ import hashlib
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = "GEMINI_API_KEY"
+app.secret_key = os.getenv("SECRET_KEY")
 
 UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
