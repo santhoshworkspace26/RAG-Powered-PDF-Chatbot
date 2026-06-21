@@ -3,5 +3,5 @@ flask
 google-generativeai
 sentence-transformers
 faiss-cpu
-pypdf2
+pypdf
 python-dotenv
