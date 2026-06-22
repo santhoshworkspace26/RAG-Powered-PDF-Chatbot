@@ -485,3 +485,84 @@ body.light .toggle-thumb {
     color: var(--text-tertiary);
     margin-top: 10px;
 }
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+    :root {
+        --sidebar-w: 80vw;
+    }
+
+    body {
+        position: relative;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+        transform: translateX(0);
+        transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+
+    .sidebar.collapsed {
+        width: 80vw;
+        opacity: 1;
+        transform: translateX(-100%);
+        border: none;
+    }
+
+    .main {
+        width: 100vw;
+        min-width: 0;
+    }
+
+    .main.full {
+        width: 100vw;
+    }
+
+    .msg {
+        padding: 12px 4%;
+    }
+
+    .bubble {
+        max-width: 90%;
+        font-size: 14px;
+    }
+
+    .input-area {
+        padding: 12px 4% 16px;
+    }
+
+    .welcome {
+        padding: 40px 16px 24px;
+    }
+
+    .welcome h1 {
+        font-size: 24px;
+    }
+
+    .suggestion-chips {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chip {
+        width: 100%;
+        text-align: center;
+    }
+
+    .topbar {
+        padding: 10px 14px;
+    }
+
+    .pdf-pill {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .theme-toggle {
+        width: 56px;
+        height: 28px;
+    }
+}
