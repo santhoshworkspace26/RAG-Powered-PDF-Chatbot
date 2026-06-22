@@ -14,7 +14,7 @@ def get_embeddings(chunks, task_type="retrieval_document"):
     embeddings = []
     for chunk in chunks:
         result = client.models.embed_content(
-            model="gemini-embedding-exp-03-07",
+            model="gemini-embedding-001",
             contents=chunk
         )
         embeddings.append(result.embeddings[0].values)
