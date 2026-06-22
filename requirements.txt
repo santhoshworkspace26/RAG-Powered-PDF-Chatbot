@@ -1,6 +1,6 @@
 gunicorn
 flask
-google-generativeai
+google-genai
 faiss-cpu
 pypdf
 python-dotenv

@@ -1,10 +1,11 @@
-import google.generativeai as genai
-import numpy as np
 import os
+import numpy as np
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def get_embeddings(chunks, task_type="retrieval_document"):
     if isinstance(chunks, str):
@@ -12,11 +13,10 @@ def get_embeddings(chunks, task_type="retrieval_document"):
     
     embeddings = []
     for chunk in chunks:
-        result = genai.embed_content(
-            model="models/embedding-001",
-            content=chunk,
-            task_type=task_type
+        result = client.models.embed_content(
+            model="gemini-embedding-exp-03-07",
+            contents=chunk
         )
-        embeddings.append(result["embedding"])
+        embeddings.append(result.embeddings[0].values)
     
     return np.array(embeddings)
