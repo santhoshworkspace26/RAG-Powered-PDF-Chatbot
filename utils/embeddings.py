@@ -13,7 +13,7 @@ def get_embeddings(chunks, task_type="retrieval_document"):
     embeddings = []
     for chunk in chunks:
         result = genai.embed_content(
-            model="models/text-embedding-004",
+            model="models/embedding-001",
             content=chunk,
             task_type=task_type
         )
