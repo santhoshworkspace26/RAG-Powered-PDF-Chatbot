@@ -3,6 +3,9 @@ import os
 import sqlite3
 import hashlib
 from functools import wraps
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
@@ -108,6 +111,7 @@ def signup():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    session.clear()  # Clear any old session
     error = None
     if request.method == "POST":
         email = request.form["email"].strip()
@@ -133,7 +137,9 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    response = redirect(url_for("login"))
+    response.delete_cookie('session')
+    return response
 
 
 # ── Main ─────────────────────────────────────────────────────
