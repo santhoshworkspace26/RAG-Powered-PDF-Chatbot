@@ -61,7 +61,8 @@ def hash_password(password):
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if "user_id" not in session:
+        if "user_id" not in session or "username" not in session:
+            session.clear()
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated
@@ -111,7 +112,7 @@ def signup():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    session.clear()  # Clear any old session
+    session.clear()
     error = None
     if request.method == "POST":
         email = request.form["email"].strip()
@@ -146,6 +147,17 @@ def logout():
 @app.route("/")
 @login_required
 def home():
+    conn = get_db()
+    user = conn.execute(
+        "SELECT id FROM users WHERE id = ? AND username = ?",
+        (session["user_id"], session["username"])
+    ).fetchone()
+    conn.close()
+
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
     history = get_history(session["user_id"])
     return render_template("index.html", history=history)
 
@@ -154,6 +166,16 @@ def home():
 @login_required
 def view_chat(chat_id):
     conn = get_db()
+    user = conn.execute(
+        "SELECT id FROM users WHERE id = ? AND username = ?",
+        (session["user_id"], session["username"])
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        session.clear()
+        return redirect(url_for("login"))
+
     chat = conn.execute(
         "SELECT * FROM chat_history WHERE id = ? AND user_id = ?",
         (chat_id, session["user_id"])
@@ -176,6 +198,17 @@ def view_chat(chat_id):
 @app.route("/upload", methods=["POST"])
 @login_required
 def upload_pdf():
+    conn = get_db()
+    user = conn.execute(
+        "SELECT id FROM users WHERE id = ? AND username = ?",
+        (session["user_id"], session["username"])
+    ).fetchone()
+    conn.close()
+
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
     pdf_file = request.files["pdf"]
     if pdf_file.filename == "":
         return "No file selected"
@@ -203,6 +236,17 @@ def upload_pdf():
 @app.route("/ask", methods=["POST"])
 @login_required
 def ask_question():
+    conn = get_db()
+    user = conn.execute(
+        "SELECT id FROM users WHERE id = ? AND username = ?",
+        (session["user_id"], session["username"])
+    ).fetchone()
+    conn.close()
+
+    if not user:
+        session.clear()
+        return redirect(url_for("login"))
+
     question = request.form["question"]
     user_id = session["user_id"]
     history = get_history(user_id)
